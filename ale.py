@@ -7,6 +7,7 @@ from ale_python_interface import ALEInterface
 import cv2
 
 import environment
+from utils import imresize
 
 
 class ALE(environment.EpisodicEnvironment):
