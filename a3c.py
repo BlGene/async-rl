@@ -33,6 +33,16 @@ class A3CModel(chainer.Link):
     def unchain_backward(self):
         pass
 
+    '''
+    # Rehabilitate this function soon to replace load in a3c_ale:main()
+    def load_model(self, model_filename):
+        """Load a network model form a file
+        """
+        serializers.load_hdf5(model_filename, self)
+        # copy_param.copy_param(target_link=self.model,
+        #                       source_link=self.shared_model)
+
+    '''
 
 class A3C(object):
     """A3C: Asynchronous Advantage Actor-Critic.
@@ -176,6 +186,7 @@ class A3C(object):
             self.model.reset_state()
             return None
 
+    # This function doesn't work properly when called from a single agent
     def load_model(self, model_filename):
         """Load a network model form a file
         """
@@ -184,9 +195,10 @@ class A3C(object):
                               source_link=self.shared_model)
         opt_filename = model_filename + '.opt'
         if os.path.exists(opt_filename):
+            serializers.load_hdf5(opt_filename, self.optimizer)
+        else:
             print('WARNING: {0} was not found, so loaded only a model'.format(
                 opt_filename))
-            serializers.load_hdf5(model_filename + '.opt', self.optimizer)
 
     def save_model(self, model_filename):
         """Save a network model to a file
